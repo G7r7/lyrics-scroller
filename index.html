@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lyrics Scroller</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header id="appHeader" class="hero">
+        <div>
+          <p class="eyebrow">Application de défilement</p>
+          <h1>Lyrics Scroller</h1>
+          <p class="hero-copy">
+            Ajoutez une chanson, copiez ses paroles, choisissez la vitesse et démarrez le défilement avec une pause d’introduction.
+          </p>
+        </div>
+      </header>
+
+      <main id="appLayout" class="layout">
+        <section class="panel form-panel">
+          <h2>Ajouter une chanson</h2>
+          <form id="songForm" class="song-form">
+            <label>
+              <span>Titre</span>
+              <input id="title" name="title" type="text" placeholder="Ex. Hotel California" required />
+            </label>
+            <label>
+              <span>Artiste</span>
+              <input id="artist" name="artist" type="text" placeholder="Ex. Eagles" />
+            </label>
+            <label>
+              <span>Paroles</span>
+              <textarea id="lyrics" name="lyrics" rows="12" placeholder="Collez ici les paroles..." required></textarea>
+            </label>
+            <div class="form-row">
+              <label>
+                <span>Vitesse (px/s)</span>
+                <input id="speed" name="speed" type="number" min="20" max="400" step="5" value="90" required />
+              </label>
+              <label>
+                <span>Pause de démarrage (s)</span>
+                <input id="pause" name="pause" type="number" min="0" max="30" step="1" value="0" required />
+              </label>
+            </div>
+            <button type="submit">Enregistrer la chanson</button>
+          </form>
+        </section>
+
+        <section class="panel list-panel">
+          <div class="panel-header">
+            <h2>Mes chansons</h2>
+            <p id="storageHint">Enregistrées localement dans votre navigateur.</p>
+          </div>
+          <ul id="songList" class="song-list"></ul>
+        </section>
+
+        <section id="prompterPanel" class="panel player-panel hidden-panel">
+          <div class="panel-header">
+            <h2>Défilement</h2>
+            <p id="playerStatus">Sélectionnez une chanson pour commencer.</p>
+          </div>
+
+          <div id="playerMeta" class="player-meta">
+            <h3>Aucune chanson sélectionnée</h3>
+            <p>Choisissez une chanson dans la liste.</p>
+          </div>
+
+          <div class="player-screen">
+            <div class="player-controls">
+              <button id="playBtn" type="button">Démarrer <span class="shortcut">Espace</span></button>
+              <button id="pauseBtn" type="button">Pause <span class="shortcut">Espace</span></button>
+              <button id="resetBtn" type="button">Recommencer <span class="shortcut">Retour Échap</span></button>
+              <button id="speedDownBtn" type="button">- Vitesse <span class="shortcut">-</span></button>
+              <button id="speedUpBtn" type="button">+ Vitesse <span class="shortcut">+</span></button>
+              <button id="pauseDownBtn" type="button">- Pause <span class="shortcut">[</span></button>
+              <button id="pauseUpBtn" type="button">+ Pause <span class="shortcut">]</span></button>
+              <button id="fullscreenBtn" type="button">Plein écran <span class="shortcut">Esc</span></button>
+              <span id="speedValue" class="speed-pill">Vitesse : 0 px/s</span>
+              <span id="pauseValue" class="speed-pill">Pause : 0 s</span>
+            </div>
+
+            <div class="lyrics-viewport" id="lyricsViewport">
+              <div id="pauseBanner" class="pause-banner hidden"></div>
+              <div id="countdownOverlay" class="countdown-overlay hidden"></div>
+              <div class="lyrics-track" id="lyricsTrack"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
