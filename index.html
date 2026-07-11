@@ -20,8 +20,9 @@
 
       <main id="appLayout" class="layout">
         <section class="panel form-panel">
-          <h2>Ajouter une chanson</h2>
+          <h2 id="formTitle">Ajouter une chanson</h2>
           <form id="songForm" class="song-form">
+            <input id="songId" name="songId" type="hidden" />
             <label>
               <span>Titre</span>
               <input id="title" name="title" type="text" placeholder="Ex. Hotel California" required />
@@ -37,14 +38,17 @@
             <div class="form-row">
               <label>
                 <span>Vitesse (px/s)</span>
-                <input id="speed" name="speed" type="number" min="20" max="400" step="5" value="90" required />
+                <input id="speed" name="speed" type="number" max="400" step="5" value="90" required />
               </label>
               <label>
                 <span>Pause de démarrage (s)</span>
                 <input id="pause" name="pause" type="number" min="0" max="30" step="1" value="0" required />
               </label>
             </div>
-            <button type="submit">Enregistrer la chanson</button>
+            <div class="form-actions">
+              <button type="submit" id="submitBtn">Enregistrer la chanson</button>
+              <button type="button" id="cancelEditBtn" class="secondary-btn hidden">Annuler</button>
+            </div>
           </form>
         </section>
 
