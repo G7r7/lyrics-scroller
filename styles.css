@@ -175,6 +175,39 @@ p {
   gap: 12px;
 }
 
+.song-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.panel-header > div {
+  min-width: 0;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.secondary-btn {
+  background: rgba(255, 255, 255, 0.12);
+  color: #f5f7fb;
+}
+
+.hidden {
+  display: none !important;
+}
+
 .player-screen {
   display: flex;
   flex-direction: column;
@@ -319,14 +352,6 @@ button {
 
 button:hover {
   transform: translateY(-1px);
-}
-
-.panel-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
 }
 
 .song-list {

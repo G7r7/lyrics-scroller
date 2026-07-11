@@ -19,7 +19,7 @@
       </header>
 
       <main id="appLayout" class="layout">
-        <section class="panel form-panel">
+        <section id="formPanel" class="panel form-panel hidden-panel">
           <h2 id="formTitle">Ajouter une chanson</h2>
           <form id="songForm" class="song-form">
             <input id="songId" name="songId" type="hidden" />
@@ -54,8 +54,11 @@
 
         <section class="panel list-panel">
           <div class="panel-header">
-            <h2>Mes chansons</h2>
-            <p id="storageHint">Enregistrées localement dans votre navigateur.</p>
+            <div>
+              <h2>Mes chansons</h2>
+              <p id="storageHint">Enregistrées localement dans votre navigateur.</p>
+            </div>
+            <button id="addSongBtn" type="button" class="secondary-btn">Ajouter une chanson</button>
           </div>
           <ul id="songList" class="song-list"></ul>
         </section>

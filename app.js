@@ -15,6 +15,12 @@ let lastFrameTime = 0;
 const songForm = document.getElementById('songForm');
 const songListEl = document.getElementById('songList');
 const lyricsTrack = document.getElementById('lyricsTrack');
+const formPanel = document.getElementById('formPanel');
+const addSongBtn = document.getElementById('addSongBtn');
+const formTitle = document.getElementById('formTitle');
+const submitBtn = document.getElementById('submitBtn');
+const cancelEditBtn = document.getElementById('cancelEditBtn');
+const songIdInput = document.getElementById('songId');
 const playerMeta = document.getElementById('playerMeta');
 const playerStatus = document.getElementById('playerStatus');
 const playBtn = document.getElementById('playBtn');
@@ -42,6 +48,8 @@ init();
 function init() {
   renderSongList();
   bindEvents();
+  hideSongForm();
+  resetSongForm();
   if (songs.length) {
     selectedSongId = songs[0].id;
     selectedSong = songs[0];
@@ -60,6 +68,14 @@ function init() {
 
 function bindEvents() {
   songForm.addEventListener('submit', handleSubmit);
+  addSongBtn.addEventListener('click', () => {
+    showSongForm();
+    resetSongForm();
+  });
+  cancelEditBtn.addEventListener('click', () => {
+    resetSongForm();
+    hideSongForm();
+  });
   playBtn.addEventListener('click', startPlayback);
   pauseBtn.addEventListener('click', pausePlayback);
   resetBtn.addEventListener('click', resetPlayback);
@@ -88,6 +104,7 @@ function handleSubmit(event) {
   event.preventDefault();
 
   const formData = new FormData(songForm);
+  const songId = formData.get('songId')?.toString().trim();
   const title = formData.get('title').toString().trim();
   const artist = formData.get('artist').toString().trim();
   const lyrics = formData.get('lyrics').toString().trim();
@@ -95,6 +112,23 @@ function handleSubmit(event) {
   const pause = Number(formData.get('pause'));
 
   if (!title || !lyrics) {
+    return;
+  }
+
+  if (songId) {
+    songs = songs.map((entry) => entry.id === songId ? { ...entry, title, artist, lyrics, speed, pause } : entry);
+    persistSongs();
+    renderSongList();
+    const selected = songs.find((entry) => entry.id === songId);
+    if (selected) {
+      selectedSongId = songId;
+      selectedSong = selected;
+      updatePlayerMeta();
+      resetPlayback();
+      renderLyrics();
+    }
+    resetSongForm();
+    hideSongForm();
     return;
   }
 
@@ -111,9 +145,8 @@ function handleSubmit(event) {
   persistSongs();
   renderSongList();
   selectSong(song.id);
-  songForm.reset();
-  document.getElementById('speed').value = '90';
-  document.getElementById('pause').value = '0';
+  resetSongForm();
+  hideSongForm();
 }
 
 function renderSongList() {
@@ -131,13 +164,20 @@ function renderSongList() {
             <strong>${escapeHtml(song.title)}</strong>
             <small>${escapeHtml(song.artist || 'Artiste inconnu')} • ${song.speed}px/s • pause ${song.pause}s</small>
           </div>
-          <button type="button" data-action="select" data-id="${song.id}">Choisir</button>
+          <div class="song-actions">
+            <button type="button" data-action="select" data-id="${song.id}">Choisir</button>
+            <button type="button" data-action="edit" data-id="${song.id}">Éditer</button>
+          </div>
         </li>`;
     })
     .join('');
 
   songListEl.querySelectorAll('[data-action="select"]').forEach((button) => {
     button.addEventListener('click', () => selectSong(button.getAttribute('data-id')));
+  });
+
+  songListEl.querySelectorAll('[data-action="edit"]').forEach((button) => {
+    button.addEventListener('click', () => editSong(button.getAttribute('data-id')));
   });
 
   const firstSong = songListEl.querySelector('.song-item');
@@ -156,6 +196,41 @@ function selectSong(songId) {
   updatePlayerMeta();
   resetPlayback();
   enterFullscreenMode();
+}
+
+function editSong(songId) {
+  const song = songs.find((entry) => entry.id === songId);
+  if (!song) return;
+
+  showSongForm();
+  formTitle.textContent = 'Modifier une chanson';
+  submitBtn.textContent = 'Enregistrer les modifications';
+  cancelEditBtn.classList.remove('hidden');
+  songIdInput.value = song.id;
+  document.getElementById('title').value = song.title;
+  document.getElementById('artist').value = song.artist || '';
+  document.getElementById('lyrics').value = song.lyrics;
+  document.getElementById('speed').value = song.speed;
+  document.getElementById('pause').value = song.pause;
+  document.getElementById('title').focus();
+}
+
+function showSongForm() {
+  formPanel.classList.remove('hidden-panel');
+}
+
+function hideSongForm() {
+  formPanel.classList.add('hidden-panel');
+}
+
+function resetSongForm() {
+  songForm.reset();
+  songIdInput.value = '';
+  formTitle.textContent = 'Ajouter une chanson';
+  submitBtn.textContent = 'Enregistrer la chanson';
+  cancelEditBtn.classList.add('hidden');
+  document.getElementById('speed').value = '90';
+  document.getElementById('pause').value = '0';
 }
 
 function updatePlayerMeta() {
