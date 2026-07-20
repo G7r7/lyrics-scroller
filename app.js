@@ -406,9 +406,19 @@ function changePause(delta) {
 
 function handleKeyboardShortcuts(event) {
   const target = event.target;
-  const isTyping = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT');
+  const isTyping = target && (
+    target.tagName === 'INPUT' ||
+    target.tagName === 'TEXTAREA' ||
+    target.tagName === 'SELECT' ||
+    target.isContentEditable ||
+    target.closest?.('input, textarea, select, [contenteditable="true"]')
+  );
 
-  if (!isTyping && appLayout.classList.contains('fullscreen-mode')) {
+  if (isTyping) {
+    return;
+  }
+
+  if (appLayout.classList.contains('fullscreen-mode')) {
     if (event.key === 'ArrowDown') {
       event.preventDefault();
       scrollPrompterBy(-140);
